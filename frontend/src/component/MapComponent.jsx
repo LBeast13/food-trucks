@@ -63,9 +63,16 @@ export class MapComponent extends Component{
           const dist = this.state.distance/1000;
           FoodTruckDataService.retrieveFoodTrucksWithinCircle(latitude,longitude,dist)
             .then(resp => {
-              this.setState({
-                foodtrucks: resp.data._embedded.foodTruckList
-              })
+              console.log(resp);
+              if(resp.data.hasOwnProperty("_embedded")){
+                this.setState({
+                  foodtrucks: resp.data._embedded.foodTruckList
+                })
+              } else {
+                this.setState({
+                  foodtrucks: []
+                })
+              }
             });
         });
 
