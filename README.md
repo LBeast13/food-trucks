@@ -1,69 +1,132 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Food Trucks
 
-## Available Scripts
 
-In the project directory, you can run:
+This is a Web Application that tells the user what food trucks might be found near a specific location on a map.</br>
+Dataset used available on [DataSF: Food Trucks](https://data.sfgov.org/Economy-and-Community/Mobile-Food-Facility-Permit/rqzj-sfat)
 
-### `npm start`
+# Description of my solution
+## Backend API REST
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The technologies I used to build the API are :
+- Spring Boot Framework (Java)
+- H2 for in-memory database
+- OpenCSV
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+I have chose to download the data from [DataSF: Food Trucks](https://data.sfgov.org/Economy-and-Community/Mobile-Food-Facility-Permit/rqzj-sfat) as a CSV. Then I simply extract the data of this file using OpenCSV and put it in the H2 in-memory database. That means that the data is not persisted after runtime, I make this choice because of the time constraint but this could be an upgrade in a next version.
 
-### `npm test`
+Here are all the request you can make to the API :
 
-Launches the test runner in the interactive watch mode.<br />
-There are no tests available yet.
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Create/Add a Food Truck 
+```
+POST /foodtrucks
+Accept: application/json
+Content-Type: application/json
 
-### `npm run build`
+{
+"name" : "The Food Place",
+"latitude" : "47.87",
+"longitude" : "-121.785"
+}
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Update a Food Truck 
+```
+PUT /foodtrucks/{Foodtruck Id}
+Accept: application/json
+Content-Type: application/json
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+{
+"name" : "The Food Place",
+"latitude" : "47.87",
+"longitude" : "-121.785"
+}
 
-### `npm run eject`
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Retrieve a list of all the Food Trucks
+```
+Get /foodtrucks
+Accept: application/json
+Content-Type: application/json
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Find a Food Truck
+```
+Get /foodtrucks/{FoodTruck Id}
+Accept: application/json
+Content-Type: application/json
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Delete a Todo Note Resource
+```
+DELETE /foodtrucks/{FoodTruck Id}
+Accept: application/json
+Content-Type: application/json
+```
 
-## Learn More
+### Get all the Food Trucks within a circle with a specific radius from a given geographical point
+```
+Get /foodtrucks/withincircle?lat={latitude}&lon={longitude}&dist={circle radius}
+Accept: application/json
+Content-Type: application/json
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Frontend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The technologies I used to build the Frontend are :
+- React JS Framework
+- HTML/CSS
+- Bootstrap
+- MapQuest API
+- Google Maps API
 
-### Code Splitting
+React is very powerful for the frontend. You can factorize a lot of code and structure it better.
+I have created some components to make the code more maintainable. I have also created two Services :
+- FoodTruckDataService to make the request to my API backend
+- MapService to request the MapQuest API 
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+I use Google Maps API only to display the map because it has limited functionality for free users, that is why I used MapQuest API for other thing like converting an address into a geographic point (latitude and longitude).
 
-### Analyzing the Bundle Size
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+# Getting started
+## Requirements
 
-### Making a Progressive Web App
+For building and running the application you need:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+- [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- [Maven 3](https://maven.apache.org)
 
-### Advanced Configuration
+Once you have cloned the repository follow these simple steps.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+## Setting up the Backend
 
-### Deployment
+First you must build the project. Open a terminal in the API-backend folder and enter the command :
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+`mvn clean install`
 
-### `npm run build` fails to minify
+Once successfully built, run the service by using the following command :
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+`mvn spring-boot:run`
+
+Then the API will be running on localhost:8080.
+
+## Setting up the Frontend
+
+Open a terminal in the frontend folder and install the nodes modules with the command :
+
+`npm install`
+
+After all the packages are installed you can finally start the frontend server with the command :
+
+`npm start`
+
+You can open a web browser and enjoy the app by entering the address [http://localhost:3000](http://localhost:3000)
+
+# What's next ?
+
+If I was to spend additional time on the project, I would have :
+- Implemented some unit and integrity tests
+- Set up a persistance system with a database (probably a NoSQL database to have a better scalability)
+- Added some other features as displaying the food trucks detail (with their menu ?)
